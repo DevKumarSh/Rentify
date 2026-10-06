@@ -123,6 +123,10 @@ const DashboardSidebar = () => {
               <BarChart3 size={18} />
               <span>System Analytics</span>
             </NavLink>
+            <NavLink to="/admin/profile" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+              <User size={18} />
+              <span>Admin Profile</span>
+            </NavLink>
           </>
         )}
       </nav>

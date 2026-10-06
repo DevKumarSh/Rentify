@@ -41,6 +41,7 @@ import ManageListings from '../pages/admin/ManageListings';
 import ListingVerification from '../pages/admin/ListingVerification';
 import Reports from '../pages/admin/Reports';
 import Analytics from '../pages/admin/Analytics';
+import AdminProfile from '../pages/admin/AdminProfile';
 
 // 404
 import NotFound from '../pages/NotFound';
@@ -106,6 +107,7 @@ const AppRoutes = () => {
         <Route path="/admin/users" element={<ManageUsers />} />
         <Route path="/admin/reports" element={<Reports />} />
         <Route path="/admin/analytics" element={<Analytics />} />
+        <Route path="/admin/profile" element={<AdminProfile />} />
       </Route>
     </Routes>
   );

@@ -212,6 +212,14 @@ const Navbar = () => {
                           <Shield size={16} />
                           <span>Open Reports</span>
                         </Link>
+                        <Link
+                          to="/admin/profile"
+                          className="dropdown-item"
+                          onClick={() => setUserDropdownOpen(false)}
+                        >
+                          <User size={16} />
+                          <span>Admin Profile</span>
+                        </Link>
                       </>
                     )}
 
