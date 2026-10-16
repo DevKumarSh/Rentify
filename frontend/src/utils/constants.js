@@ -71,6 +71,7 @@ export const DEFAULT_AMENITIES = [
   'Meals / Food Included'
 ];
 
+
 export const POPULAR_CITIES = [
   'Pune',
   'Bengaluru',
@@ -79,5 +80,19 @@ export const POPULAR_CITIES = [
   'Delhi NCR',
   'Chennai',
   'Kolkata',
-  'Ahmedabad'
+  'Ahmedabad',
+  'Dehradun',
+  'Chandigarh',
+  'Jaipur',
+  'Lucknow',
+  'Noida',
+  'Greater Noida',
+  'Indore',
+  'Bhopal',
+  'Kochi',
+  'Surat',
+  'Patna',
+  'Varanasi',
+  'Gurugram'
 ];
+
