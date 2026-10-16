@@ -43,7 +43,7 @@ const Footer = () => {
           <div className="footer-col">
             <h4 className="footer-heading">Popular Hubs</h4>
             <ul className="footer-links">
-              <li><Link to="/rooms?city=Pune">Rooms in Pune (Kothrud, Hinjewadi)</Link></li>
+              <li><Link to="/rooms?city=Dehradun">Rooms in Dehradun (Clement Town, Dehradun)</Link></li>
               <li><Link to="/rooms?city=Bengaluru">Rooms in Bengaluru (Koramangala, Hebbal)</Link></li>
               <li><Link to="/rooms?city=Hyderabad">Rooms in Hyderabad (Madhapur, Hitec City)</Link></li>
               <li><Link to="/rooms?city=Delhi+NCR">Rooms in Delhi NCR / Gurugram</Link></li>
@@ -64,7 +64,7 @@ const Footer = () => {
               </li>
               <li>
                 <MapPin size={15} />
-                <span>MCA Academic Project, Pune, Maharashtra</span>
+                <span>MCA Academic Project, Dehradun, Uttarakhand</span>
               </li>
             </ul>
           </div>
