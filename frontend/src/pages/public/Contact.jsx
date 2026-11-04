@@ -12,7 +12,7 @@ const Contact = () => {
 
   return (
     <div style={{ padding: '3.5rem 0 5rem', backgroundColor: 'var(--bg-main)' }}>
-      <div className="container" style={{ maxWidth: '960px' }}>
+      <div className="container" style={{ maxWidth: '1040px' }}>
         <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
           <h1 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '0.75rem' }}>
             Get in Touch
@@ -22,15 +22,16 @@ const Contact = () => {
           </p>
         </div>
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1.3fr', gap: '2rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1.1fr 1.2fr', gap: '2rem', alignItems: 'start' }}>
           {/* Contact Details */}
-          <div className="card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            <h3 style={{ fontSize: '1.25rem', fontWeight: 700 }}>Contact Information</h3>
+          <div className="card" style={{ padding: '2.25rem', display: 'flex', flexDirection: 'column', gap: '1.75rem', boxShadow: 'var(--shadow-md)' }}>
+            <h3 style={{ fontSize: '1.4rem', fontWeight: 800, color: 'var(--text-main)' }}>Contact Information</h3>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <div style={{
-                width: '40px',
-                height: '40px',
+                width: '44px',
+                flexShrink: 0,
+                height: '44px',
                 borderRadius: 'var(--radius-md)',
                 backgroundColor: 'var(--primary-light)',
                 color: 'var(--primary)',
@@ -38,18 +39,19 @@ const Contact = () => {
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <Mail size={18} />
+                <Mail size={20} />
               </div>
               <div>
-                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)' }}>Email</span>
-                <p style={{ fontWeight: 600 }}>support@rentify.in</p>
+                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Email</span>
+                <p style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--text-main)', marginTop: '0.15rem' }}>support@rentify.in</p>
               </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <div style={{
-                width: '40px',
-                height: '40px',
+                width: '44px',
+                flexShrink: 0,
+                height: '44px',
                 borderRadius: 'var(--radius-md)',
                 backgroundColor: 'var(--success-light)',
                 color: 'var(--success)',
@@ -57,18 +59,19 @@ const Contact = () => {
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <Phone size={18} />
+                <Phone size={20} />
               </div>
               <div>
-                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)' }}>Helpline</span>
-                <p style={{ fontWeight: 600 }}>+91 98765 43210 (Mon-Sat, 9am-7pm)</p>
+                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Helpline</span>
+                <p style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--text-main)', marginTop: '0.15rem' }}>+91 98765 43210 (Mon-Sat, 9am-7pm)</p>
               </div>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
               <div style={{
-                width: '40px',
-                height: '40px',
+                width: '44px',
+                flexShrink: 0,
+                height: '44px',
                 borderRadius: 'var(--radius-md)',
                 backgroundColor: 'var(--info-light)',
                 color: 'var(--info)',
@@ -76,11 +79,11 @@ const Contact = () => {
                 alignItems: 'center',
                 justifyContent: 'center'
               }}>
-                <MapPin size={18} />
+                <MapPin size={20} />
               </div>
               <div>
-                <span style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--text-muted)' }}>Project Headquarters</span>
-                <p style={{ fontWeight: 600 }}>Kothrud, Pune, Maharashtra - 411038</p>
+                <span style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Project Headquarters</span>
+                <p style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--text-main)', marginTop: '0.15rem', lineHeight: 1.45 }}>Kothrud, Pune, Maharashtra - 411038</p>
               </div>
             </div>
           </div>
