@@ -52,3 +52,5 @@ For full product requirements, database schema, entity models, and API specifica
 
 ### Database & API Notes
 - Backend configured with Spring Data JPA and H2/MySQL.
+
+- Default test port: 8081
