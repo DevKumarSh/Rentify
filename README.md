@@ -48,3 +48,7 @@ Use the built-in top navbar demo switcher to test all user roles with 1-click:
 ## 📄 Documentation
 
 For full product requirements, database schema, entity models, and API specifications, refer to [PRD.md](./PRD.md).
+
+
+### Database & API Notes
+- Backend configured with Spring Data JPA and H2/MySQL.
