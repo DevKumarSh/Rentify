@@ -1,79 +1,31 @@
 import api from './api';
-import { MOCK_REVIEWS } from './mockData';
-import { storage } from '../utils/storage';
-
-let localReviews = [...MOCK_REVIEWS];
 
 export const reviewService = {
   getRoomReviews: async (roomId) => {
-    try {
-      const response = await api.get(`/rooms/${roomId}/reviews`);
-      return response.data;
-    } catch (err) {
-      const reviews = localReviews.filter(r => r.roomId === Number(roomId));
-      return {
-        content: reviews,
-        totalElements: reviews.length
-      };
-    }
+    const response = await api.get(`/rooms/${roomId}/reviews`);
+    return response.data;
   },
 
   addReview: async (reviewData) => {
-    try {
-      const response = await api.post('/reviews', reviewData);
-      return response.data;
-    } catch (err) {
-      const user = storage.getUser() || { id: 1, name: 'Aarav Sharma' };
-      const newReview = {
-        id: Date.now(),
-        roomId: Number(reviewData.roomId),
-        seekerId: user.id,
-        seekerName: user.name,
-        rating: Number(reviewData.rating),
-        comment: reviewData.comment,
-        createdAt: new Date().toISOString()
-      };
-      localReviews = [newReview, ...localReviews];
-      return newReview;
-    }
+    const response = await api.post('/reviews', reviewData);
+    return response.data;
   },
 
   updateReview: async (id, reviewData) => {
-    try {
-      const response = await api.put(`/reviews/${id}`, reviewData);
-      return response.data;
-    } catch (err) {
-      const index = localReviews.findIndex(r => r.id === Number(id));
-      if (index !== -1) {
-        localReviews[index] = {
-          ...localReviews[index],
-          ...reviewData,
-          rating: Number(reviewData.rating || localReviews[index].rating)
-        };
-        return localReviews[index];
-      }
-      return null;
-    }
-  },
-
-  getSeekerReviews: async () => {
-    try {
-      const response = await api.get('/reviews/seeker');
-      return response.data;
-    } catch (err) {
-      const user = storage.getUser();
-      const seekerId = user?.id || 1;
-      return localReviews.filter(r => r.seekerId === seekerId);
-    }
+    const response = await api.put(`/reviews/${id}`, reviewData);
+    return response.data;
   },
 
   deleteReview: async (id) => {
-    try {
-      await api.delete(`/reviews/${id}`);
-      return true;
-    } catch (err) {
-      localReviews = localReviews.filter(r => r.id !== Number(id));
-      return true;
-    }
+    const response = await api.delete(`/reviews/${id}`);
+    return response.data;
+  },
+
+  getSeekerReviews: async () => {
+    const response = await api.get('/reviews/seeker');
+    return {
+      content: Array.isArray(response.data) ? response.data : [],
+      totalElements: Array.isArray(response.data) ? response.data.length : 0
+    };
   }
 };

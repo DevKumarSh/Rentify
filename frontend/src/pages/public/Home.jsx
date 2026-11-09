@@ -21,6 +21,7 @@ import './Home.css';
 
 const Home = () => {
   const [featuredRooms, setFeaturedRooms] = useState([]);
+  const [totalRoomsCount, setTotalRoomsCount] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,6 +29,7 @@ const Home = () => {
       try {
         const res = await roomService.getRooms();
         setFeaturedRooms(res.content?.slice(0, 3) || []);
+        setTotalRoomsCount(res.totalElements || 0);
       } catch (err) {
         console.error(err);
       } finally {
@@ -71,7 +73,7 @@ const Home = () => {
           {/* Quick Stats Banner */}
           <div className="hero-stats-banner">
             <div className="stat-item">
-              <span className="stat-number">500+</span>
+              <span className="stat-number">{totalRoomsCount > 0 ? `${totalRoomsCount}+` : 'Active'}</span>
               <span className="stat-label">Verified Listings</span>
             </div>
             <div className="stat-divider" />
@@ -81,13 +83,13 @@ const Home = () => {
             </div>
             <div className="stat-divider" />
             <div className="stat-item">
-              <span className="stat-number">2,400+</span>
-              <span className="stat-label">Happy Tenants</span>
+              <span className="stat-number">100%</span>
+              <span className="stat-label">Direct Connection</span>
             </div>
             <div className="stat-divider" />
             <div className="stat-item">
-              <span className="stat-number">8+</span>
-              <span className="stat-label">Major Tech Hubs</span>
+              <span className="stat-number">24/7</span>
+              <span className="stat-label">Instant Discovery</span>
             </div>
           </div>
         </div>
@@ -167,10 +169,21 @@ const Home = () => {
                   </div>
                 </div>
               ))
-            ) : (
+            ) : featuredRooms.length > 0 ? (
               featuredRooms.map((room) => (
                 <RoomCard key={room.id} room={room} />
               ))
+            ) : (
+              <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '3.5rem 1.5rem' }} className="card">
+                <Building size={48} color="var(--primary)" style={{ margin: '0 auto 1rem', opacity: 0.8 }} />
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 700, marginBottom: '0.5rem' }}>No Rooms Listed Yet</h3>
+                <p style={{ color: 'var(--text-secondary)', maxWidth: '450px', margin: '0 auto 1.5rem auto', fontSize: '0.9rem' }}>
+                  Be the first property owner to list a room on RentiFy, connect directly with seekers, and move tenants in.
+                </p>
+                <Link to="/owner/rooms/new" className="btn btn-primary" style={{ display: 'inline-flex', margin: '0 auto' }}>
+                  <Building size={16} /> Post a Room Listing
+                </Link>
+              </div>
             )}
           </div>
         </div>

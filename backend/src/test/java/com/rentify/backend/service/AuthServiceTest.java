@@ -130,5 +130,61 @@ public class AuthServiceTest {
 
         assertThrows(BadRequestException.class, () -> authService.login(request));
     }
+
+    @Test
+    void testCreatePasswordResetTokenSuccess() {
+        when(userRepository.findByEmail("rahul@test.com")).thenReturn(Optional.of(sampleUser));
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        String token = authService.createPasswordResetToken("rahul@test.com");
+
+        assertNotNull(token);
+        assertEquals(12, token.length());
+        verify(userRepository, times(1)).save(sampleUser);
+        assertNotNull(sampleUser.getResetPasswordToken());
+        assertNotNull(sampleUser.getResetPasswordExpiry());
+    }
+
+    @Test
+    void testCreatePasswordResetTokenUserNotFound() {
+        when(userRepository.findByEmail("unknown@test.com")).thenReturn(Optional.empty());
+
+        assertThrows(com.rentify.backend.exception.ResourceNotFoundException.class,
+                () -> authService.createPasswordResetToken("unknown@test.com"));
+    }
+
+    @Test
+    void testResetPasswordSuccess() {
+        sampleUser.setResetPasswordToken("RESETTOKEN12");
+        sampleUser.setResetPasswordExpiry(java.time.LocalDateTime.now().plusMinutes(15));
+
+        when(userRepository.findByResetPasswordToken("RESETTOKEN12")).thenReturn(Optional.of(sampleUser));
+        when(passwordEncoder.encode("newPassword123")).thenReturn("encodedNewPassword");
+        when(userRepository.save(any(User.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        authService.resetPassword("RESETTOKEN12", "newPassword123");
+
+        verify(userRepository, times(1)).save(sampleUser);
+        assertNull(sampleUser.getResetPasswordToken());
+        assertNull(sampleUser.getResetPasswordExpiry());
+        assertEquals("encodedNewPassword", sampleUser.getPassword());
+    }
+
+    @Test
+    void testResetPasswordExpiredTokenThrowsBadRequest() {
+        sampleUser.setResetPasswordToken("EXPIREDTOKEN");
+        sampleUser.setResetPasswordExpiry(java.time.LocalDateTime.now().minusMinutes(5));
+
+        when(userRepository.findByResetPasswordToken("EXPIREDTOKEN")).thenReturn(Optional.of(sampleUser));
+
+        assertThrows(BadRequestException.class, () -> authService.resetPassword("EXPIREDTOKEN", "newPassword123"));
+    }
+
+    @Test
+    void testResetPasswordInvalidTokenThrowsBadRequest() {
+        when(userRepository.findByResetPasswordToken("INVALIDTOKEN")).thenReturn(Optional.empty());
+
+        assertThrows(BadRequestException.class, () -> authService.resetPassword("INVALIDTOKEN", "newPassword123"));
+    }
 }
 

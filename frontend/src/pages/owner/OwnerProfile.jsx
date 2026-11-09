@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { authService } from '../../services/authService';
 import { User, Mail, Phone, ShieldCheck, Save, CheckCircle2, Building } from 'lucide-react';
@@ -6,12 +6,30 @@ import { User, Mail, Phone, ShieldCheck, Save, CheckCircle2, Building } from 'lu
 const OwnerProfile = () => {
   const { user, updateUser } = useAuth();
   const [formData, setFormData] = useState({
-    name: user?.name || 'Mr. Ramesh Rao',
-    phone: user?.phone || '9812345678',
-    email: user?.email || 'owner@rentify.com'
+    name: user?.name || '',
+    phone: user?.phone || '',
+    email: user?.email || ''
   });
   const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchLatestProfile = async () => {
+      try {
+        const profile = await authService.getProfile();
+        if (profile) {
+          setFormData({
+            name: profile.name || '',
+            phone: profile.phone || '',
+            email: profile.email || ''
+          });
+        }
+      } catch (err) {
+        console.error('Failed to fetch owner profile', err);
+      }
+    };
+    fetchLatestProfile();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -70,7 +88,7 @@ const OwnerProfile = () => {
         </div>
 
         <div className="form-group">
-          <label className="form-label">Owner Email Address</label>
+          <label className="form-label">Email Address (Registered)</label>
           <div className="auth-input-wrapper">
             <Mail size={18} className="auth-input-icon" />
             <input
@@ -81,10 +99,13 @@ const OwnerProfile = () => {
               style={{ backgroundColor: 'var(--bg-surface)', cursor: 'not-allowed' }}
             />
           </div>
+          <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.35rem', display: 'block' }}>
+            Registered email used for verification and platform notices.
+          </span>
         </div>
 
         <div className="form-group">
-          <label className="form-label">Public Phone Number for Tenant Calls</label>
+          <label className="form-label">Phone Number (Tenant Call/WhatsApp)</label>
           <div className="auth-input-wrapper">
             <Phone size={18} className="auth-input-icon" />
             <input
@@ -92,26 +113,24 @@ const OwnerProfile = () => {
               className="form-input with-icon"
               value={formData.phone}
               onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+              placeholder="e.g. 9812345678"
               required
             />
           </div>
+          <span style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: '0.35rem', display: 'block' }}>
+            This phone number is visible to verified seekers after sending an enquiry.
+          </span>
         </div>
 
         <div className="form-group">
-          <label className="form-label">Verification Badge Status</label>
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.5rem',
-            padding: '0.75rem',
-            backgroundColor: 'var(--success-light)',
-            color: '#065f46',
-            borderRadius: 'var(--radius-md)',
-            fontSize: '0.875rem',
-            fontWeight: 600
-          }}>
-            <ShieldCheck size={18} />
-            <span>Verified Landlord Account</span>
+          <label className="form-label">Account Role & Verification</label>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginTop: '0.35rem' }}>
+            <span className="badge badge-info">
+              <Building size={12} style={{ marginRight: '0.25rem' }} /> Room Owner
+            </span>
+            <span className="badge badge-success">
+              <ShieldCheck size={12} style={{ marginRight: '0.25rem' }} /> Verified Landlord
+            </span>
           </div>
         </div>
 

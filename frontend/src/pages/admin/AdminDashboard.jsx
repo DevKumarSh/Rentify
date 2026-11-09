@@ -62,15 +62,15 @@ const AdminDashboard = () => {
       <div className="grid grid-cols-4" style={{ marginBottom: '2.5rem' }}>
         <DashboardCard
           title="Total Users"
-          value={metrics.totalUsers || 142}
-          subtitle={`${metrics.totalSeekers || 110} Seekers, ${metrics.totalOwners || 32} Owners`}
+          value={metrics.totalUsers ?? 0}
+          subtitle={`${metrics.totalSeekers ?? 0} Seekers, ${metrics.totalOwners ?? 0} Owners`}
           icon={Users}
           color="primary"
         />
         <DashboardCard
           title="Total Listings"
-          value={metrics.totalListings || 58}
-          subtitle={`${metrics.activeListings || 47} Active rooms`}
+          value={metrics.totalListings ?? 0}
+          subtitle={`${metrics.activeListings ?? 0} Active rooms`}
           icon={Building}
           color="info"
         />

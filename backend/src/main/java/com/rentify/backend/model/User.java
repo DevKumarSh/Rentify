@@ -38,6 +38,12 @@ public class User {
     @Column(name = "profile_image", length = 255)
     private String profileImage;
 
+    @Column(name = "reset_password_token", length = 100)
+    private String resetPasswordToken;
+
+    @Column(name = "reset_password_expiry")
+    private LocalDateTime resetPasswordExpiry;
+
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
@@ -150,5 +156,21 @@ public class User {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getResetPasswordToken() {
+        return resetPasswordToken;
+    }
+
+    public void setResetPasswordToken(String resetPasswordToken) {
+        this.resetPasswordToken = resetPasswordToken;
+    }
+
+    public LocalDateTime getResetPasswordExpiry() {
+        return resetPasswordExpiry;
+    }
+
+    public void setResetPasswordExpiry(LocalDateTime resetPasswordExpiry) {
+        this.resetPasswordExpiry = resetPasswordExpiry;
     }
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { authService } from '../../services/authService';
 import { User, Mail, Phone, ShieldCheck, Save, CheckCircle2, Lock, KeyRound, Briefcase } from 'lucide-react';
@@ -6,9 +6,9 @@ import { User, Mail, Phone, ShieldCheck, Save, CheckCircle2, Lock, KeyRound, Bri
 const AdminProfile = () => {
   const { user, updateUser } = useAuth();
   const [formData, setFormData] = useState({
-    name: user?.name || 'Dev Sharma',
-    phone: user?.phone || '9900112233',
-    email: user?.email || 'devsharmakumar74@gmail.com',
+    name: user?.name || '',
+    phone: user?.phone || '',
+    email: user?.email || '',
     department: 'Platform Operations & Moderation',
     currentPassword: '',
     newPassword: '',
@@ -16,6 +16,24 @@ const AdminProfile = () => {
   });
 
   const [saved, setSaved] = useState(false);
+  useEffect(() => {
+    const fetchLatest = async () => {
+      try {
+        const profile = await authService.getProfile();
+        if (profile) {
+          setFormData((prev) => ({
+            ...prev,
+            name: profile.name || '',
+            phone: profile.phone || '',
+            email: profile.email || ''
+          }));
+        }
+      } catch (err) {
+        console.error('Failed to fetch admin profile', err);
+      }
+    };
+    fetchLatest();
+  }, []);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 

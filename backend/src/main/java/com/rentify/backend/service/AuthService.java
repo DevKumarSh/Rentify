@@ -5,6 +5,7 @@ import com.rentify.backend.dto.AuthResponse;
 import com.rentify.backend.dto.RegisterRequest;
 import com.rentify.backend.exception.BadRequestException;
 import com.rentify.backend.exception.DuplicateResourceException;
+import com.rentify.backend.exception.ResourceNotFoundException;
 import com.rentify.backend.model.Role;
 import com.rentify.backend.model.User;
 import com.rentify.backend.repository.UserRepository;
@@ -12,6 +13,9 @@ import com.rentify.backend.security.JwtTokenProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 public class AuthService {
@@ -85,5 +89,44 @@ public class AuthService {
         user.setVerified(role != Role.ROLE_OWNER); // Seekers auto-verified, owners verified by admin if desired
 
         return userRepository.save(user);
+    }
+
+    public String createPasswordResetToken(String email) {
+        if (email == null || email.trim().isEmpty()) {
+            throw new BadRequestException("Email address is required");
+        }
+
+        User user = userRepository.findByEmail(email.trim().toLowerCase())
+                .orElseThrow(() -> new ResourceNotFoundException("No account found with email: " + email.trim()));
+
+        String token = UUID.randomUUID().toString().replace("-", "").substring(0, 12).toUpperCase();
+        user.setResetPasswordToken(token);
+        user.setResetPasswordExpiry(LocalDateTime.now().plusMinutes(30));
+        user.setUpdatedAt(LocalDateTime.now());
+        userRepository.save(user);
+
+        return token;
+    }
+
+    public void resetPassword(String token, String newPassword) {
+        if (token == null || token.trim().isEmpty()) {
+            throw new BadRequestException("Reset token is required");
+        }
+        if (newPassword == null || newPassword.length() < 6) {
+            throw new BadRequestException("New password must be at least 6 characters long");
+        }
+
+        User user = userRepository.findByResetPasswordToken(token.trim().toUpperCase())
+                .orElseThrow(() -> new BadRequestException("Invalid or unrecognized password reset token"));
+
+        if (user.getResetPasswordExpiry() == null || user.getResetPasswordExpiry().isBefore(LocalDateTime.now())) {
+            throw new BadRequestException("Password reset token has expired. Please request a new one.");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setResetPasswordToken(null);
+        user.setResetPasswordExpiry(null);
+        user.setUpdatedAt(LocalDateTime.now());
+        userRepository.save(user);
     }
 }

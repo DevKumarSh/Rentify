@@ -36,12 +36,13 @@ npm run dev
 
 The application will be running at `http://localhost:5173/`.
 
-### 2. Demo Persona Quick-Switching
+### 2. Platform Authentication & Seeded Super Administrator
 
-Use the built-in top navbar demo switcher to test all user roles with 1-click:
-- **Room Seeker**: Aarav Sharma (`seeker@rentify.com` / `password123`)
-- **Room Owner**: Mr. Ramesh Rao (`owner@rentify.com` / `password123`)
-- **Admin**: Dev Sharma (`devsharmakumar74@gmail.com` / `password123`)
+The platform operates fully dynamically with live backend API persistence:
+- **Room Seekers & Property Owners**: Create dynamic accounts directly via `/register`.
+
+
+- **Platform Super Admin**: Dev Sharma (`devsharmakumar74@gmail.com` / `password123`)
 
 ---
 

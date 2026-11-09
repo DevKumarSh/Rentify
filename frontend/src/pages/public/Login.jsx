@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { isValidEmail } from '../../utils/validators';
-import { LogIn, User, Building, Shield, Lock, Mail, AlertCircle } from 'lucide-react';
+import { LogIn, Lock, Mail, AlertCircle } from 'lucide-react';
 import './AuthPages.css';
 
 const Login = () => {
@@ -49,17 +49,6 @@ const Login = () => {
     }
   };
 
-  const fillDemoAccount = (role) => {
-    if (role === 'SEEKER') {
-      setFormData({ email: 'seeker@rentify.com', password: 'password123' });
-    } else if (role === 'OWNER') {
-      setFormData({ email: 'owner@rentify.com', password: 'password123' });
-    } else if (role === 'ADMIN') {
-      setFormData({ email: 'devsharmakumar74@gmail.com', password: 'password123' });
-    }
-    setError('');
-  };
-
   return (
     <div className="auth-page-container">
       <div className="auth-card card">
@@ -95,8 +84,13 @@ const Login = () => {
           </div>
 
           <div className="form-group">
-            <label className="form-label">Password</label>
-            <div className="auth-input-wrapper">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <label className="form-label" style={{ marginBottom: 0 }}>Password</label>
+              <Link to="/forgot-password" style={{ fontSize: '0.82rem', color: 'var(--primary)', fontWeight: 600 }}>
+                Forgot password?
+              </Link>
+            </div>
+            <div className="auth-input-wrapper" style={{ marginTop: '0.35rem' }}>
               <Lock size={18} className="auth-input-icon" />
               <input
                 type="password"
@@ -114,22 +108,6 @@ const Login = () => {
             <span>{loading ? 'Logging in...' : 'Sign In'}</span>
           </button>
         </form>
-
-        {/* Demo Fast-Login Section */}
-        <div className="demo-accounts-box">
-          <p className="demo-box-title">⚡ Instant Demo Testing Logins:</p>
-          <div className="demo-buttons-grid">
-            <button type="button" className="btn btn-sm btn-secondary" onClick={() => fillDemoAccount('SEEKER')}>
-              <User size={14} /> Seeker (Aarav)
-            </button>
-            <button type="button" className="btn btn-sm btn-secondary" onClick={() => fillDemoAccount('OWNER')}>
-              <Building size={14} /> Owner (Mr. Rao)
-            </button>
-            <button type="button" className="btn btn-sm btn-secondary" onClick={() => fillDemoAccount('ADMIN')}>
-              <Shield size={14} /> Admin (Priya)
-            </button>
-          </div>
-        </div>
 
         <div className="auth-footer">
           <p>

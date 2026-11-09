@@ -22,11 +22,9 @@ const ListingForm = ({ initialValues = {}, onSubmit, isSubmitting = false, isEdi
     address: initialValues.address || '',
     genderPreference: initialValues.genderPreference || 'ANY',
     furnishingStatus: initialValues.furnishingStatus || 'FULLY_FURNISHED',
-    roomType: initialValues.roomType || 'ONE_BHK',
-    amenities: initialValues.amenities || ['WiFi (High Speed)', 'Attached Bathroom', 'Geyser / Hot Water'],
-    images: initialValues.images || [
-      'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1000&q=80'
-    ]
+    roomType: initialValues.roomType || 'SINGLE_ROOM',
+    amenities: initialValues.amenities || [],
+    images: initialValues.images || []
   });
 
   const [errors, setErrors] = useState({});

@@ -72,7 +72,7 @@ const OwnerDashboard = () => {
             <Sparkles size={14} color="#38bdf8" /> Landlord & PG Operator Dashboard
           </div>
           <h1 style={{ fontSize: '2rem', fontWeight: 800, color: '#ffffff', lineHeight: 1.2 }}>
-            Hello, {user?.name || 'Mr. Ramesh Rao'}!
+            Hello, {user?.name || 'Owner'}!
           </h1>
           <p style={{ color: '#94a3b8', fontSize: '0.95rem', marginTop: '0.5rem', lineHeight: 1.5 }}>
             Manage your rental units, reply to verified tenant enquiries, and update room vacancy in real time.

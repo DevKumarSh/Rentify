@@ -13,6 +13,7 @@ import RoleBasedRoute from './RoleBasedRoute';
 import Home from '../pages/public/Home';
 import Login from '../pages/public/Login';
 import Register from '../pages/public/Register';
+import ForgotPassword from '../pages/public/ForgotPassword';
 import SearchRooms from '../pages/public/SearchRooms';
 import RoomDetailsPage from '../pages/public/RoomDetailsPage';
 import About from '../pages/public/About';
@@ -56,6 +57,8 @@ const AppRoutes = () => {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ForgotPassword />} />
         <Route path="/rooms" element={<SearchRooms />} />
         <Route path="/rooms/:id" element={<RoomDetailsPage />} />
         <Route path="/about" element={<About />} />

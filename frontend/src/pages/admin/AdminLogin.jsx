@@ -7,7 +7,7 @@ import '../public/AuthPages.css';
 const AdminLogin = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ email: 'devsharmakumar74@gmail.com', password: 'password123' });
+  const [formData, setFormData] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -55,6 +55,7 @@ const AdminLogin = () => {
               <input
                 type="email"
                 className="form-input with-icon"
+                placeholder="admin@rentify.in"
                 value={formData.email}
                 onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 required
@@ -69,6 +70,7 @@ const AdminLogin = () => {
               <input
                 type="password"
                 className="form-input with-icon"
+                placeholder="••••••••"
                 value={formData.password}
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 required
