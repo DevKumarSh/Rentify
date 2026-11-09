@@ -131,7 +131,7 @@ const MyListings = () => {
                   </div>
 
                   <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '0.35rem' }}>
-                    <Link to={`/rooms/${room.id}`} style={{ color: 'var(--text-primary)' }}>
+                    <Link to={`/owner/rooms/${room.id}`} style={{ color: 'var(--text-primary)' }}>
                       {room.title}
                     </Link>
                   </h3>
@@ -163,6 +163,10 @@ const MyListings = () => {
                     <span>{isAvailable ? 'Mark as Rented' : 'Mark as Available'}</span>
                   </button>
 
+                  <Link to={`/owner/rooms/${room.id}`} className="btn btn-sm btn-outline">
+                    <Eye size={14} /> Manage Details
+                  </Link>
+
                   <Link to={`/owner/rooms/${room.id}/edit`} className="btn btn-sm btn-outline">
                     <Edit3 size={14} /> Edit Listing
                   </Link>
@@ -184,23 +188,23 @@ const MyListings = () => {
           <Building size={40} color="var(--text-muted)" style={{ margin: '0 auto 1rem' }} />
           <h3 style={{ fontSize: '1.2rem', fontWeight: 700, marginBottom: '0.5rem' }}>No listings published yet</h3>
           <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
-            List your rental rooms to start receiving enquiries from verified seekers.
+            List your rental rooms in Pune, Bengaluru, Hyderabad, or Mumbai to connect directly with tenants.
           </p>
           <Link to="/owner/rooms/new" className="btn btn-primary">
-            <PlusCircle size={16} /> Post Your First Room
+            <PlusCircle size={16} /> Publish Your First Room
           </Link>
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete Confirmation Dialog */}
       <ConfirmationDialog
         isOpen={!!deleteTargetId}
-        onClose={() => setDeleteTargetId(null)}
-        onConfirm={handleConfirmDelete}
         title="Delete Room Listing"
-        message="Are you sure you want to delete this listing? This action cannot be undone."
-        confirmText="Delete Listing"
-        isDangerous={true}
+        message="Are you sure you want to remove this property listing? Prospective tenants will no longer be able to find it."
+        confirmLabel="Yes, Delete Listing"
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setDeleteTargetId(null)}
+        isDestructive={true}
       />
     </div>
   );

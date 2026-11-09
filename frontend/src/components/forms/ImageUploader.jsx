@@ -1,14 +1,65 @@
-import React, { useState } from 'react';
-import { Upload, X, Image as ImageIcon, Plus } from 'lucide-react';
+import React, { useState, useRef } from 'react';
+import { Upload, X, Image as ImageIcon, Plus, FolderOpen } from 'lucide-react';
+import { roomService } from '../../services/roomService';
 
-const ImageUploader = ({ images = [], onChange }) => {
+const ImageUploader = ({ images = [], onChange, roomId = null, maxImages = 8 }) => {
   const [inputUrl, setInputUrl] = useState('');
+  const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef(null);
 
   const handleAddImage = (e) => {
     e.preventDefault();
     if (!inputUrl.trim()) return;
+    if (images.length >= maxImages) {
+      alert(`Maximum of ${maxImages} images allowed`);
+      return;
+    }
     onChange([...images, inputUrl.trim()]);
     setInputUrl('');
+  };
+
+  const handleFileSelect = async (e) => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+
+    if (images.length + files.length > maxImages) {
+      alert(`Cannot exceed ${maxImages} images total (currently ${images.length})`);
+      return;
+    }
+
+    // Validate size and format
+    const validFiles = files.filter(f => {
+      if (f.size > 5 * 1024 * 1024) {
+        alert(`File ${f.name} exceeds 5 MB size limit`);
+        return false;
+      }
+      return true;
+    });
+
+    if (!validFiles.length) return;
+
+    if (roomId) {
+      setUploading(true);
+      try {
+        const formData = new FormData();
+        validFiles.forEach(f => formData.append('files', f));
+        const res = await roomService.uploadImages(roomId, formData);
+        if (res && res.length > 0) {
+          const newUrls = res.map(img => img.imageUrl);
+          onChange([...images, ...newUrls]);
+        }
+      } catch (err) {
+        alert(err.message || 'Failed to upload files to server');
+      } finally {
+        setUploading(false);
+        if (fileInputRef.current) fileInputRef.current.value = '';
+      }
+    } else {
+      // Preview with object URLs
+      const fileUrls = validFiles.map(f => URL.createObjectURL(f));
+      onChange([...images, ...fileUrls]);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
   };
 
   const handleRemoveImage = (index) => {
@@ -16,6 +67,10 @@ const ImageUploader = ({ images = [], onChange }) => {
   };
 
   const addSampleImage = () => {
+    if (images.length >= maxImages) {
+      alert(`Maximum of ${maxImages} images reached`);
+      return;
+    }
     const samples = [
       'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1000&q=80',
       'https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1000&q=80',
@@ -33,13 +88,14 @@ const ImageUploader = ({ images = [], onChange }) => {
 
   return (
     <div className="image-uploader-wrapper">
-      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
         <input
           type="url"
           className="form-input"
           placeholder="Paste image URL (https://...)"
           value={inputUrl}
           onChange={(e) => setInputUrl(e.target.value)}
+          style={{ minWidth: '220px', flex: 1 }}
         />
         <button
           type="button"
@@ -48,6 +104,24 @@ const ImageUploader = ({ images = [], onChange }) => {
         >
           <Plus size={16} /> Add URL
         </button>
+
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileSelect}
+          multiple
+          accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+          style={{ display: 'none' }}
+        />
+        <button
+          type="button"
+          className="btn btn-primary"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploading}
+        >
+          <FolderOpen size={16} /> {uploading ? 'Uploading...' : 'Browse Device Files'}
+        </button>
+
         <button
           type="button"
           className="btn btn-outline"
@@ -131,7 +205,7 @@ const ImageUploader = ({ images = [], onChange }) => {
             color: 'var(--text-muted)'
           }}>
             <Upload size={24} style={{ margin: '0 auto 0.5rem' }} />
-            <p style={{ fontSize: '0.85rem' }}>No room photos added yet. Click "Sample Photo" or paste a URL above.</p>
+            <p style={{ fontSize: '0.85rem' }}>No room photos added yet. Browse device files, paste a URL, or add a sample photo.</p>
           </div>
         )}
       </div>

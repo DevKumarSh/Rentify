@@ -1,25 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from '../common/Modal';
 import Rating from './Rating';
 import { reviewService } from '../../services/reviewService';
 
-const ReviewModal = ({ isOpen, onClose, roomId, onSuccess }) => {
+const ReviewModal = ({ isOpen, onClose, roomId, initialReview = null, onSuccess }) => {
   const [rating, setRating] = useState(5);
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  useEffect(() => {
+    if (initialReview) {
+      setRating(initialReview.rating || 5);
+      setComment(initialReview.comment || '');
+    } else {
+      setRating(5);
+      setComment('');
+    }
+    setError('');
+  }, [initialReview, isOpen]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!comment.trim()) {
-      setError('Please provide feedback or review comments');
+    if (!comment.trim() || comment.trim().length < 10) {
+      setError('Please provide feedback of at least 10 characters');
       return;
     }
 
     setLoading(true);
     setError('');
     try {
-      await reviewService.addReview({ roomId, rating, comment });
+      if (initialReview?.id) {
+        await reviewService.updateReview(initialReview.id, { rating, comment: comment.trim() });
+      } else {
+        await reviewService.addReview({ roomId, rating, comment: comment.trim() });
+      }
       if (onSuccess) onSuccess();
       onClose();
     } catch (err) {
@@ -30,7 +45,7 @@ const ReviewModal = ({ isOpen, onClose, roomId, onSuccess }) => {
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose} title="Write a Property Review">
+    <Modal isOpen={isOpen} onClose={onClose} title={initialReview ? "Edit Your Property Review" : "Write a Property Review"}>
       <form onSubmit={handleSubmit}>
         <div className="form-group" style={{ textAlign: 'center', margin: '1rem 0' }}>
           <label className="form-label" style={{ display: 'block', marginBottom: '0.5rem' }}>
@@ -43,7 +58,7 @@ const ReviewModal = ({ isOpen, onClose, roomId, onSuccess }) => {
         </div>
 
         <div className="form-group">
-          <label className="form-label">Review / Experience</label>
+          <label className="form-label">Review / Experience (min 10 chars)</label>
           <textarea
             className="form-textarea"
             rows={4}
@@ -51,6 +66,8 @@ const ReviewModal = ({ isOpen, onClose, roomId, onSuccess }) => {
             onChange={(e) => setComment(e.target.value)}
             placeholder="Share your experience regarding cleanliness, amenities, landlord communication, and safety..."
             required
+            minLength={10}
+            maxLength={500}
           />
         </div>
 
@@ -61,7 +78,7 @@ const ReviewModal = ({ isOpen, onClose, roomId, onSuccess }) => {
             Cancel
           </button>
           <button type="submit" className="btn btn-primary" disabled={loading}>
-            {loading ? 'Posting...' : 'Submit Review'}
+            {loading ? 'Saving...' : (initialReview ? 'Update Review' : 'Submit Review')}
           </button>
         </div>
       </form>

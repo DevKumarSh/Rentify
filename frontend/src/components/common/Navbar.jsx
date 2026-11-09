@@ -18,10 +18,9 @@ import {
 import './Navbar.css';
 
 const Navbar = () => {
-  const { user, role, isAuthenticated, isSeeker, isOwner, isAdmin, login, logout } = useAuth();
+  const { user, role, isAuthenticated, isSeeker, isOwner, isAdmin, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
-  const [demoMenuOpen, setDemoMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -29,20 +28,6 @@ const Navbar = () => {
     logout();
     setUserDropdownOpen(false);
     navigate('/');
-  };
-
-  const switchDemoRole = async (targetRole) => {
-    if (targetRole === 'SEEKER') {
-      await login('seeker@rentify.com', 'password123');
-      navigate('/seeker/dashboard');
-    } else if (targetRole === 'OWNER') {
-      await login('owner@rentify.com', 'password123');
-      navigate('/owner/dashboard');
-    } else if (targetRole === 'ADMIN') {
-      await login('devsharmakumar74@gmail.com', 'password123');
-      navigate('/admin/dashboard');
-    }
-    setDemoMenuOpen(false);
   };
 
   const getDashboardLink = () => {
@@ -80,33 +65,6 @@ const Navbar = () => {
 
         {/* Right Action Items */}
         <div className="nav-actions desktop-only">
-          {/* Quick Demo Switcher for pair-programming & evaluation */}
-          <div className="demo-switcher-dropdown">
-            <button
-              type="button"
-              className="btn btn-sm demo-badge-btn"
-              onClick={() => setDemoMenuOpen(!demoMenuOpen)}
-              title="Switch role instantly to test all features"
-            >
-              <Shield size={14} />
-              <span>Demo Persona: {user ? role?.replace('ROLE_', '') : 'Guest'}</span>
-            </button>
-            {demoMenuOpen && (
-              <div className="dropdown-menu demo-menu">
-                <div className="dropdown-header">Quick Role Switcher</div>
-                <button className="dropdown-item" onClick={() => switchDemoRole('SEEKER')}>
-                  <User size={15} /> Log in as Room Seeker (Aarav)
-                </button>
-                <button className="dropdown-item" onClick={() => switchDemoRole('OWNER')}>
-                  <Building size={15} /> Log in as Room Owner (Mr. Rao)
-                </button>
-                <button className="dropdown-item" onClick={() => switchDemoRole('ADMIN')}>
-                  <Shield size={15} /> Log in as Platform Admin (Priya)
-                </button>
-              </div>
-            )}
-          </div>
-
           {isAuthenticated ? (
             <>
               {isSeeker && (

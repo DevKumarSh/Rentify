@@ -131,3 +131,4 @@ public class AuthServiceTest {
         assertThrows(BadRequestException.class, () -> authService.login(request));
     }
 }
+

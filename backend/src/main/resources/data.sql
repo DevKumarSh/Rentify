@@ -19,7 +19,7 @@ INSERT INTO amenities (id, name) VALUES
 (10, 'RO Water'),
 (11, 'Security / CCTV'),
 (12, 'Two-Wheeler Parking')
-ON DUPLICATE KEY UPDATE name=VALUES(name), email=VALUES(email);
+ON DUPLICATE KEY UPDATE name=VALUES(name);
 
 -- Sample Rooms
 INSERT INTO rooms (id, owner_id, title, description, rent, security_deposit, address, city, locality, pincode, gender_preference, furnishing_status, room_type, availability_status, available_from, num_occupants, listing_status, verification_status, view_count) VALUES

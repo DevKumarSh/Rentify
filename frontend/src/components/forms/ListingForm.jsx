@@ -100,53 +100,56 @@ const ListingForm = ({ initialValues = {}, onSubmit, isSubmitting = false, isEdi
         </div>
 
         <Link to="/owner/rooms" className="btn btn-sm btn-secondary">
-          <ArrowLeft size={16} /> Back to Listings
+          <ArrowLeft size={16} /> Cancel
         </Link>
       </div>
 
-      {/* Basic Title & Details */}
+      {/* Basic Info */}
       <div className="form-group">
         <label className="form-label">Listing Title *</label>
         <input
           type="text"
           name="title"
-          className={`form-input ${errors.title ? 'error' : ''}`}
-          placeholder="e.g. Spacious 1 BHK Flat near MIT World Peace University"
+          className={`form-input ${errors.title ? 'has-error' : ''}`}
+          placeholder="e.g. Spacious 1 BHK Flat near MIT College, Kothrud"
           value={formData.title}
           onChange={handleInputChange}
-          required
         />
-        {errors.title && <p className="form-error">{errors.title}</p>}
+        {errors.title && <span className="form-error">{errors.title}</span>}
       </div>
 
       <div className="form-group">
         <label className="form-label">Full Description *</label>
         <textarea
           name="description"
+          className={`form-textarea ${errors.description ? 'has-error' : ''}`}
           rows={4}
-          className={`form-textarea ${errors.description ? 'error' : ''}`}
-          placeholder="Describe room layout, nearby transit, rules, utilities included, etc."
+          placeholder="Describe your room, building rules, proximity to colleges/metro, and inclusions..."
           value={formData.description}
           onChange={handleInputChange}
-          required
         />
-        {errors.description && <p className="form-error">{errors.description}</p>}
+        {errors.description && <span className="form-error">{errors.description}</span>}
       </div>
 
-      {/* Pricing Row */}
-      <div className="grid grid-cols-2" style={{ marginBottom: '1.25rem' }}>
+      {/* Pricing and Location */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+        gap: '1.25rem',
+        marginBottom: '1.25rem'
+      }}>
         <div className="form-group" style={{ marginBottom: 0 }}>
           <label className="form-label">Monthly Rent (₹) *</label>
           <input
             type="number"
             name="rent"
-            className={`form-input ${errors.rent ? 'error' : ''}`}
-            placeholder="e.g. 9500"
+            className={`form-input ${errors.rent ? 'has-error' : ''}`}
+            placeholder="e.g. 7500"
             value={formData.rent}
             onChange={handleInputChange}
-            required
+            min={1}
           />
-          {errors.rent && <p className="form-error">{errors.rent}</p>}
+          {errors.rent && <span className="form-error">{errors.rent}</span>}
         </div>
 
         <div className="form-group" style={{ marginBottom: 0 }}>
@@ -154,17 +157,22 @@ const ListingForm = ({ initialValues = {}, onSubmit, isSubmitting = false, isEdi
           <input
             type="number"
             name="securityDeposit"
-            className={`form-input ${errors.securityDeposit ? 'error' : ''}`}
+            className="form-input"
             placeholder="e.g. 15000"
             value={formData.securityDeposit}
             onChange={handleInputChange}
+            min={0}
           />
-          {errors.securityDeposit && <p className="form-error">{errors.securityDeposit}</p>}
         </div>
       </div>
 
       {/* Location Details */}
-      <div className="grid grid-cols-2" style={{ marginBottom: '1.25rem' }}>
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+        gap: '1.25rem',
+        marginBottom: '1.25rem'
+      }}>
         <div className="form-group" style={{ marginBottom: 0 }}>
           <label className="form-label">City *</label>
           <select
@@ -172,7 +180,6 @@ const ListingForm = ({ initialValues = {}, onSubmit, isSubmitting = false, isEdi
             className="form-select"
             value={formData.city}
             onChange={handleInputChange}
-            required
           >
             {POPULAR_CITIES.map((c) => (
               <option key={c} value={c}>{c}</option>
@@ -181,34 +188,39 @@ const ListingForm = ({ initialValues = {}, onSubmit, isSubmitting = false, isEdi
         </div>
 
         <div className="form-group" style={{ marginBottom: 0 }}>
-          <label className="form-label">Locality / Area *</label>
+          <label className="form-label">Locality / Sector *</label>
           <input
             type="text"
             name="locality"
-            className={`form-input ${errors.locality ? 'error' : ''}`}
-            placeholder="e.g. Kothrud, Hinjewadi"
+            className={`form-input ${errors.locality ? 'has-error' : ''}`}
+            placeholder="e.g. Kothrud / Paud Road"
             value={formData.locality}
             onChange={handleInputChange}
-            required
           />
-          {errors.locality && <p className="form-error">{errors.locality}</p>}
+          {errors.locality && <span className="form-error">{errors.locality}</span>}
         </div>
       </div>
 
       <div className="form-group">
-        <label className="form-label">Complete Street Address</label>
+        <label className="form-label">Full Street Address *</label>
         <input
           type="text"
           name="address"
-          className="form-input"
-          placeholder="e.g. Plot 42, Ideal Colony, Near Paud Road"
+          className={`form-input ${errors.address ? 'has-error' : ''}`}
+          placeholder="e.g. Flat 302, Sai Residency, Near Ideal Colony Ground"
           value={formData.address}
           onChange={handleInputChange}
         />
+        {errors.address && <span className="form-error">{errors.address}</span>}
       </div>
 
-      {/* Room Specifications */}
-      <div className="grid grid-cols-3" style={{ marginBottom: '1.25rem' }}>
+      {/* Preferences & Specs */}
+      <div style={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+        gap: '1.25rem',
+        marginBottom: '1.5rem'
+      }}>
         <div className="form-group" style={{ marginBottom: 0 }}>
           <label className="form-label">Room Type *</label>
           <select
@@ -255,9 +267,9 @@ const ListingForm = ({ initialValues = {}, onSubmit, isSubmitting = false, isEdi
       {/* Photos Section */}
       <div style={{ margin: '1.75rem 0' }}>
         <label className="form-label" style={{ fontSize: '1rem', marginBottom: '0.75rem' }}>
-          Property Photos
+          Property Photos (Max 8)
         </label>
-        <ImageUploader images={formData.images} onChange={handleImagesChange} />
+        <ImageUploader images={formData.images} onChange={handleImagesChange} roomId={initialValues.id || null} maxImages={8} />
       </div>
 
       {/* Amenities Checklist */}

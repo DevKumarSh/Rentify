@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { reviewService } from '../../services/reviewService';
 import ReviewCard from '../../components/review/ReviewCard';
+import ReviewModal from '../../components/review/ReviewModal';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
-import { Star, Trash2 } from 'lucide-react';
+import { Star, Trash2, Edit3 } from 'lucide-react';
 
 const MyReviews = () => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [editingReview, setEditingReview] = useState(null);
 
   const fetchReviews = async () => {
     setLoading(true);
@@ -56,15 +58,26 @@ const MyReviews = () => {
           {reviews.map((rev) => (
             <div key={rev.id} style={{ position: 'relative' }}>
               <ReviewCard review={rev} />
-              <button
-                type="button"
-                className="btn btn-sm btn-secondary text-danger"
-                style={{ position: 'absolute', top: 12, right: 12 }}
-                onClick={() => handleDelete(rev.id)}
-                title="Delete review"
-              >
-                <Trash2 size={14} /> Delete
-              </button>
+              <div style={{ position: 'absolute', top: 12, right: 12, display: 'flex', gap: '6px' }}>
+                <button
+                  type="button"
+                  className="btn btn-sm btn-secondary"
+                  onClick={() => setEditingReview(rev)}
+                  title="Edit review"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                >
+                  <Edit3 size={13} /> Edit
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-sm btn-secondary text-danger"
+                  onClick={() => handleDelete(rev.id)}
+                  title="Delete review"
+                  style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}
+                >
+                  <Trash2 size={13} /> Delete
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -76,6 +89,20 @@ const MyReviews = () => {
             After staying at or visiting a room, leave a helpful review for fellow students!
           </p>
         </div>
+      )}
+
+      {/* Edit Review Modal */}
+      {editingReview && (
+        <ReviewModal
+          isOpen={!!editingReview}
+          onClose={() => setEditingReview(null)}
+          roomId={editingReview.roomId}
+          initialReview={editingReview}
+          onSuccess={() => {
+            setEditingReview(null);
+            fetchReviews();
+          }}
+        />
       )}
     </div>
   );

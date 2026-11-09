@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { formatDateTime } from '../../utils/formatters';
-import { MessageSquare, CheckCircle, Clock, User, Reply } from 'lucide-react';
+import { MessageSquare, CheckCircle, Clock, User, Reply, ExternalLink } from 'lucide-react';
 import './EnquiryCard.css';
 
 const EnquiryCard = ({ enquiry, isOwnerView = false, onRespond }) => {
@@ -42,7 +42,14 @@ const EnquiryCard = ({ enquiry, isOwnerView = false, onRespond }) => {
           </h4>
           <span className="enquiry-date">{formatDateTime(enquiry.createdAt)}</span>
         </div>
-        <div>{getStatusBadge(enquiry.status)}</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {getStatusBadge(enquiry.status)}
+          {!isOwnerView && (
+            <Link to={`/seeker/enquiries/${enquiry.id}`} className="btn btn-sm btn-outline" style={{ fontSize: '0.75rem', padding: '3px 8px', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+              <ExternalLink size={12} /> Details
+            </Link>
+          )}
+        </div>
       </div>
 
       <div className="enquiry-card-body">
@@ -100,7 +107,7 @@ const EnquiryCard = ({ enquiry, isOwnerView = false, onRespond }) => {
                   onChange={(e) => setReplyText(e.target.value)}
                   required
                 />
-                <div className="reply-form-actions">
+                <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end', marginTop: '0.5rem' }}>
                   <button
                     type="button"
                     className="btn btn-sm btn-secondary"

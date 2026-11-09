@@ -153,3 +153,4 @@ public class RoomServiceTest {
         assertEquals("RENTED", room.getAvailabilityStatus().name());
     }
 }
+

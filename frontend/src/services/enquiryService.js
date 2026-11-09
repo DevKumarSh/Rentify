@@ -34,6 +34,17 @@ export const enquiryService = {
     }
   },
 
+  getEnquiryById: async (id) => {
+    try {
+      const response = await api.get(`/enquiries/${id}`);
+      return response.data;
+    } catch (err) {
+      const found = localEnquiries.find(e => e.id === Number(id));
+      if (!found) throw new Error('Enquiry not found');
+      return found;
+    }
+  },
+
   getSeekerEnquiries: async (params = {}) => {
     try {
       const response = await api.get('/enquiries/seeker', { params });

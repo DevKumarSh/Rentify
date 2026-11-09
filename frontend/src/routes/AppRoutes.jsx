@@ -23,6 +23,7 @@ import SeekerDashboard from '../pages/seeker/SeekerDashboard';
 import Profile from '../pages/seeker/Profile';
 import Favorites from '../pages/seeker/Favorites';
 import MyEnquiries from '../pages/seeker/MyEnquiries';
+import EnquiryDetails from '../pages/seeker/EnquiryDetails';
 import MyReviews from '../pages/seeker/MyReviews';
 
 // Owner Pages
@@ -30,6 +31,7 @@ import OwnerDashboard from '../pages/owner/OwnerDashboard';
 import AddRoom from '../pages/owner/AddRoom';
 import MyListings from '../pages/owner/MyListings';
 import EditListing from '../pages/owner/EditListing';
+import ListingDetails from '../pages/owner/ListingDetails';
 import OwnerEnquiries from '../pages/owner/OwnerEnquiries';
 import OwnerProfile from '../pages/owner/OwnerProfile';
 
@@ -73,6 +75,7 @@ const AppRoutes = () => {
         <Route path="/seeker/dashboard" element={<SeekerDashboard />} />
         <Route path="/seeker/favorites" element={<Favorites />} />
         <Route path="/seeker/enquiries" element={<MyEnquiries />} />
+        <Route path="/seeker/enquiries/:id" element={<EnquiryDetails />} />
         <Route path="/seeker/reviews" element={<MyReviews />} />
         <Route path="/seeker/profile" element={<Profile />} />
       </Route>
@@ -88,6 +91,7 @@ const AppRoutes = () => {
         <Route path="/owner/dashboard" element={<OwnerDashboard />} />
         <Route path="/owner/rooms/new" element={<AddRoom />} />
         <Route path="/owner/rooms" element={<MyListings />} />
+        <Route path="/owner/rooms/:id" element={<ListingDetails />} />
         <Route path="/owner/rooms/:id/edit" element={<EditListing />} />
         <Route path="/owner/enquiries" element={<OwnerEnquiries />} />
         <Route path="/owner/profile" element={<OwnerProfile />} />

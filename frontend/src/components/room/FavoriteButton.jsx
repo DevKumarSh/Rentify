@@ -20,7 +20,7 @@ const FavoriteButton = ({ roomId, initialIsFavorite = false, onToggle }) => {
     }
 
     if (!isSeeker) {
-      alert('Only Room Seekers can save favorite rooms. Switch to Seeker persona to test!');
+      alert('Only Room Seekers can save favorite rooms.');
       return;
     }
 
@@ -48,29 +48,27 @@ const FavoriteButton = ({ roomId, initialIsFavorite = false, onToggle }) => {
       type="button"
       onClick={handleToggle}
       disabled={loading}
-      aria-label={isFavorite ? 'Remove from favorites' : 'Save to favorites'}
+      className={`favorite-btn ${isFavorite ? 'active' : ''}`}
+      title={isFavorite ? 'Remove from favorites' : 'Save to favorites'}
       style={{
-        background: 'rgba(255, 255, 255, 0.9)',
-        backdropFilter: 'blur(4px)',
-        border: 'none',
-        borderRadius: '50%',
-        width: '36px',
-        height: '36px',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
+        width: '36px',
+        height: '36px',
+        borderRadius: '50%',
+        backgroundColor: 'rgba(255, 255, 255, 0.9)',
+        backdropFilter: 'blur(4px)',
+        border: 'none',
+        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.15)',
         cursor: 'pointer',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-        transition: 'transform 0.15s ease, background-color 0.15s ease',
-        color: isFavorite ? '#ef4444' : '#64748b'
+        transition: 'transform 0.15s ease, background-color 0.15s ease'
       }}
-      onMouseEnter={(e) => (e.currentTarget.style.transform = 'scale(1.1)')}
-      onMouseLeave={(e) => (e.currentTarget.style.transform = 'scale(1)')}
     >
       <Heart
         size={18}
+        color={isFavorite ? '#ef4444' : '#64748b'}
         fill={isFavorite ? '#ef4444' : 'none'}
-        stroke={isFavorite ? '#ef4444' : 'currentColor'}
       />
     </button>
   );

@@ -111,3 +111,4 @@ public class ReportServiceTest {
         assertNotNull(report.getResolvedAt());
     }
 }
+
