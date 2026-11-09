@@ -1,9 +1,13 @@
 package com.rentify.backend.controller;
 
 import com.rentify.backend.dto.ApiResponse;
+import com.rentify.backend.dto.ReportDTO;
 import com.rentify.backend.dto.RoomDTO;
+import com.rentify.backend.dto.UserDTO;
+import com.rentify.backend.exception.ResourceNotFoundException;
 import com.rentify.backend.model.*;
 import com.rentify.backend.repository.*;
+import com.rentify.backend.service.ReportService;
 import com.rentify.backend.service.RoomService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,17 +30,20 @@ public class AdminController {
     private final EnquiryRepository enquiryRepository;
     private final ReportRepository reportRepository;
     private final RoomService roomService;
+    private final ReportService reportService;
 
     public AdminController(UserRepository userRepository,
                            RoomRepository roomRepository,
                            EnquiryRepository enquiryRepository,
                            ReportRepository reportRepository,
-                           RoomService roomService) {
+                           RoomService roomService,
+                           ReportService reportService) {
         this.userRepository = userRepository;
         this.roomRepository = roomRepository;
         this.enquiryRepository = enquiryRepository;
         this.reportRepository = reportRepository;
         this.roomService = roomService;
+        this.reportService = reportService;
     }
 
     @GetMapping("/dashboard")
@@ -56,35 +62,31 @@ public class AdminController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<Page<User>> getAllUsers(
+    public ResponseEntity<Page<UserDTO>> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
-        Page<User> users = userRepository.findAll(pageable);
-        users.forEach(u -> u.setPassword(null));
-        return ResponseEntity.ok(users);
+        return ResponseEntity.ok(userRepository.findAll(pageable).map(UserDTO::new));
     }
 
     @PutMapping("/users/{userId}/disable")
-    public ResponseEntity<User> toggleUserStatus(@PathVariable Long userId) {
+    public ResponseEntity<UserDTO> toggleUserStatus(@PathVariable Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found: " + userId));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
 
         user.setEnabled(!user.isEnabled());
         User saved = userRepository.save(user);
-        saved.setPassword(null);
-        return ResponseEntity.ok(saved);
+        return ResponseEntity.ok(new UserDTO(saved));
     }
 
     @PutMapping("/users/{userId}/verify")
-    public ResponseEntity<User> verifyUser(@PathVariable Long userId) {
+    public ResponseEntity<UserDTO> verifyUser(@PathVariable Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found: " + userId));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
 
         user.setVerified(true);
         User saved = userRepository.save(user);
-        saved.setPassword(null);
-        return ResponseEntity.ok(saved);
+        return ResponseEntity.ok(new UserDTO(saved));
     }
 
     @GetMapping("/listings")
@@ -100,7 +102,7 @@ public class AdminController {
             @PathVariable Long roomId,
             @RequestBody Map<String, String> body) {
         Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new RuntimeException("Room not found: " + roomId));
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found: " + roomId));
 
         String statusStr = body.get("verificationStatus");
         try {
@@ -116,33 +118,36 @@ public class AdminController {
     @DeleteMapping("/listings/{roomId}")
     public ResponseEntity<ApiResponse<Void>> deleteListing(@PathVariable Long roomId) {
         Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new RuntimeException("Room not found: " + roomId));
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found: " + roomId));
 
         roomRepository.delete(room);
         return ResponseEntity.ok(ApiResponse.ok("Listing deleted by admin", null));
     }
 
     @GetMapping("/reports")
-    public ResponseEntity<Page<Report>> getReports(
+    public ResponseEntity<Page<ReportDTO>> getReports(
+            @RequestParam(required = false) String status,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
-        return ResponseEntity.ok(reportRepository.findAll(pageable));
+        return ResponseEntity.ok(reportService.getAllReports(status, pageable));
     }
 
-    @PutMapping("/reports/{reportId}/resolve")
-    public ResponseEntity<Report> resolveReport(
+    @PutMapping({"/reports/{reportId}", "/reports/{reportId}/resolve"})
+    public ResponseEntity<ReportDTO> resolveReport(
             @PathVariable Long reportId,
             @RequestBody(required = false) Map<String, String> body) {
-        Report report = reportRepository.findById(reportId)
-                .orElseThrow(() -> new RuntimeException("Report not found: " + reportId));
+        String remark = null;
+        String status = "RESOLVED";
 
-        report.setStatus("RESOLVED");
-        report.setResolvedAt(LocalDateTime.now());
-        if (body != null && body.containsKey("remark")) {
-            report.setAdminRemark(body.get("remark"));
+        if (body != null) {
+            if (body.containsKey("adminRemark")) remark = body.get("adminRemark");
+            else if (body.containsKey("remark")) remark = body.get("remark");
+
+            if (body.containsKey("status")) status = body.get("status");
         }
 
-        return ResponseEntity.ok(reportRepository.save(report));
+        ReportDTO resolved = reportService.resolveReport(reportId, remark, status);
+        return ResponseEntity.ok(resolved);
     }
 }

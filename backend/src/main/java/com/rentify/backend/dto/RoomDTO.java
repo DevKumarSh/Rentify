@@ -1,5 +1,11 @@
 package com.rentify.backend.dto;
 
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -7,13 +13,32 @@ import java.util.List;
 
 public class RoomDTO {
     private Long id;
+
+    @NotBlank(message = "Title is required")
+    @Size(min = 10, max = 100, message = "Title must be between 10 and 100 characters")
     private String title;
+
+    @NotBlank(message = "Description is required")
+    @Size(min = 20, max = 2000, message = "Description must be between 20 and 2000 characters")
     private String description;
+
+    @NotNull(message = "Rent is required")
+    @DecimalMin(value = "1.00", message = "Rent must be greater than 0")
+    @DecimalMax(value = "1000000.00", message = "Rent cannot exceed 1,000,000")
     private BigDecimal rent;
+
+    @DecimalMin(value = "0.00", message = "Security deposit cannot be negative")
     private BigDecimal securityDeposit;
+
+    @NotBlank(message = "Address is required")
     private String address;
+
+    @NotBlank(message = "City is required")
     private String city;
+
+    @NotBlank(message = "Locality is required")
     private String locality;
+
     private String pincode;
     private String genderPreference;
     private String furnishingStatus;

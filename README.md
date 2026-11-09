@@ -41,7 +41,7 @@ The application will be running at `http://localhost:5173/`.
 Use the built-in top navbar demo switcher to test all user roles with 1-click:
 - **Room Seeker**: Aarav Sharma (`seeker@rentify.com` / `password123`)
 - **Room Owner**: Mr. Ramesh Rao (`owner@rentify.com` / `password123`)
-- **Admin**: Priya Mehta (`admin@rentify.com` / `password123`)
+- **Admin**: Dev Sharma (`devsharmakumar74@gmail.com` / `password123`)
 
 ---
 

@@ -178,5 +178,25 @@ export const roomService = {
       }
       throw new Error('Room not found');
     }
+  },
+
+  uploadImages: async (roomId, formData) => {
+    try {
+      const response = await api.post(`/rooms/${roomId}/images`, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      return response.data;
+    } catch (err) {
+      return [];
+    }
+  },
+
+  deleteImage: async (roomId, imageId) => {
+    try {
+      await api.delete(`/rooms/${roomId}/images/${imageId}`);
+      return true;
+    } catch (err) {
+      return true;
+    }
   }
 };

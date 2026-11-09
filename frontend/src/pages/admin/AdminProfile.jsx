@@ -6,9 +6,9 @@ import { User, Mail, Phone, ShieldCheck, Save, CheckCircle2, Lock, KeyRound, Bri
 const AdminProfile = () => {
   const { user, updateUser } = useAuth();
   const [formData, setFormData] = useState({
-    name: user?.name || 'Priya Mehta',
+    name: user?.name || 'Dev Sharma',
     phone: user?.phone || '9900112233',
-    email: user?.email || 'admin@rentify.com',
+    email: user?.email || 'devsharmakumar74@gmail.com',
     department: 'Platform Operations & Moderation',
     currentPassword: '',
     newPassword: '',

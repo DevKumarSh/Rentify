@@ -39,7 +39,7 @@ const Navbar = () => {
       await login('owner@rentify.com', 'password123');
       navigate('/owner/dashboard');
     } else if (targetRole === 'ADMIN') {
-      await login('admin@rentify.com', 'password123');
+      await login('devsharmakumar74@gmail.com', 'password123');
       navigate('/admin/dashboard');
     }
     setDemoMenuOpen(false);

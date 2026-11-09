@@ -10,7 +10,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Long>, JpaSpecificationExecutor<Room> {
@@ -26,14 +25,20 @@ public interface RoomRepository extends JpaRepository<Room, Long>, JpaSpecificat
     long countByVerificationStatus(VerificationStatus verificationStatus);
 
     @Query("SELECT r FROM Room r WHERE r.listingStatus = 'ACTIVE' " +
+           "AND (:keyword IS NULL OR LOWER(r.title) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+           "     OR LOWER(r.description) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+           "     OR LOWER(r.locality) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+           "     OR LOWER(r.city) LIKE LOWER(CONCAT('%', :keyword, '%'))) " +
            "AND (:city IS NULL OR LOWER(r.city) = LOWER(:city)) " +
            "AND (:locality IS NULL OR LOWER(r.locality) LIKE LOWER(CONCAT('%', :locality, '%'))) " +
            "AND (:minRent IS NULL OR r.rent >= :minRent) " +
            "AND (:maxRent IS NULL OR r.rent <= :maxRent) " +
            "AND (:gender IS NULL OR r.genderPreference = :gender OR r.genderPreference = 'ANY') " +
            "AND (:furnishing IS NULL OR r.furnishingStatus = :furnishing) " +
-           "AND (:roomType IS NULL OR r.roomType = :roomType)")
+           "AND (:roomType IS NULL OR r.roomType = :roomType) " +
+           "AND (:availStatus IS NULL OR r.availabilityStatus = :availStatus)")
     Page<Room> searchRooms(
+            @Param("keyword") String keyword,
             @Param("city") String city,
             @Param("locality") String locality,
             @Param("minRent") BigDecimal minRent,
@@ -41,6 +46,7 @@ public interface RoomRepository extends JpaRepository<Room, Long>, JpaSpecificat
             @Param("gender") GenderPreference gender,
             @Param("furnishing") FurnishingStatus furnishing,
             @Param("roomType") RoomType roomType,
+            @Param("availStatus") AvailabilityStatus availStatus,
             Pageable pageable
     );
 }

@@ -21,8 +21,8 @@ export const MOCK_USERS = [
   },
   {
     id: 3,
-    name: 'Priya Mehta (Admin)',
-    email: 'admin@rentify.com',
+    name: 'Dev Sharma (Admin)',
+    email: 'devsharmakumar74@gmail.com',
     phone: '9900112233',
     role: 'ROLE_ADMIN',
     verified: true,

@@ -51,6 +51,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 // H2 Console (Web UI database viewer)
                 .requestMatchers("/h2-console/**").permitAll()
+                // Static file uploads
+                .requestMatchers("/uploads/**").permitAll()
                 // Public auth endpoints
                 .requestMatchers("/api/auth/**").permitAll()
                 // Public room browsing and search

@@ -31,6 +31,11 @@ public class EnquiryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<EnquiryDTO> getEnquiryById(@PathVariable Long id, Authentication authentication) {
+        return ResponseEntity.ok(enquiryService.getEnquiryById(id, authentication.getName()));
+    }
+
     @GetMapping("/seeker")
     public ResponseEntity<Page<EnquiryDTO>> getSeekerEnquiries(
             Authentication authentication,
@@ -59,6 +64,17 @@ public class EnquiryController {
 
         String responseText = body.get("response");
         EnquiryDTO updated = enquiryService.respondToEnquiry(id, responseText, authentication.getName());
+        return ResponseEntity.ok(updated);
+    }
+
+    @PutMapping("/{id}/status")
+    public ResponseEntity<EnquiryDTO> updateEnquiryStatus(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body,
+            Authentication authentication) {
+
+        String status = body != null && body.containsKey("status") ? body.get("status") : "CLOSED";
+        EnquiryDTO updated = enquiryService.updateEnquiryStatus(id, status, authentication.getName());
         return ResponseEntity.ok(updated);
     }
 }

@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface ReportRepository extends JpaRepository<Report, Long> {
     Page<Report> findByStatus(String status, Pageable pageable);
     long countByStatus(String status);
+    boolean existsByReporterIdAndRoomIdAndStatus(Long reporterId, Long roomId, String status);
 }

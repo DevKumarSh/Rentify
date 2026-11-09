@@ -38,10 +38,33 @@ export const reviewService = {
     }
   },
 
+  updateReview: async (id, reviewData) => {
+    try {
+      const response = await api.put(`/reviews/${id}`, reviewData);
+      return response.data;
+    } catch (err) {
+      const index = localReviews.findIndex(r => r.id === Number(id));
+      if (index !== -1) {
+        localReviews[index] = {
+          ...localReviews[index],
+          ...reviewData,
+          rating: Number(reviewData.rating || localReviews[index].rating)
+        };
+        return localReviews[index];
+      }
+      return null;
+    }
+  },
+
   getSeekerReviews: async () => {
-    const user = storage.getUser();
-    const seekerId = user?.id || 1;
-    return localReviews.filter(r => r.seekerId === seekerId);
+    try {
+      const response = await api.get('/reviews/seeker');
+      return response.data;
+    } catch (err) {
+      const user = storage.getUser();
+      const seekerId = user?.id || 1;
+      return localReviews.filter(r => r.seekerId === seekerId);
+    }
   },
 
   deleteReview: async (id) => {

@@ -7,7 +7,7 @@ import '../public/AuthPages.css';
 const AdminLogin = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ email: 'admin@rentify.com', password: 'password123' });
+  const [formData, setFormData] = useState({ email: 'devsharmakumar74@gmail.com', password: 'password123' });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 

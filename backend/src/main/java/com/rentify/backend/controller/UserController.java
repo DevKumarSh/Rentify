@@ -1,6 +1,7 @@
 package com.rentify.backend.controller;
 
-import com.rentify.backend.dto.ApiResponse;
+import com.rentify.backend.dto.UserDTO;
+import com.rentify.backend.exception.ResourceNotFoundException;
 import com.rentify.backend.model.User;
 import com.rentify.backend.repository.UserRepository;
 import org.springframework.data.domain.Page;
@@ -25,35 +26,32 @@ public class UserController {
     }
 
     @GetMapping("/profile")
-    public ResponseEntity<User> getProfile(Authentication authentication) {
+    public ResponseEntity<UserDTO> getProfile(Authentication authentication) {
         User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("User not found: " + authentication.getName()));
-        user.setPassword(null); // Never expose password hash
-        return ResponseEntity.ok(user);
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + authentication.getName()));
+        return ResponseEntity.ok(new UserDTO(user));
     }
 
     @PutMapping("/profile")
-    public ResponseEntity<User> updateProfile(@RequestBody Map<String, String> body, Authentication authentication) {
+    public ResponseEntity<UserDTO> updateProfile(@RequestBody Map<String, String> body, Authentication authentication) {
         User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("User not found: " + authentication.getName()));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + authentication.getName()));
 
-        if (body.containsKey("name")) user.setName(body.get("name"));
-        if (body.containsKey("phone")) user.setPhone(body.get("phone"));
-        if (body.containsKey("profileImage")) user.setProfileImage(body.get("profileImage"));
+        if (body.containsKey("name") && body.get("name") != null) user.setName(body.get("name").trim());
+        if (body.containsKey("phone") && body.get("phone") != null) user.setPhone(body.get("phone").trim());
+        if (body.containsKey("profileImage") && body.get("profileImage") != null) user.setProfileImage(body.get("profileImage").trim());
 
         User saved = userRepository.save(user);
-        saved.setPassword(null);
-        return ResponseEntity.ok(saved);
+        return ResponseEntity.ok(new UserDTO(saved));
     }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<Page<User>> getAllUsers(
+    public ResponseEntity<Page<UserDTO>> getAllUsers(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
-        Page<User> users = userRepository.findAll(pageable);
-        users.forEach(u -> u.setPassword(null));
+        Page<UserDTO> users = userRepository.findAll(pageable).map(UserDTO::new);
         return ResponseEntity.ok(users);
     }
 }

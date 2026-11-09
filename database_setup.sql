@@ -156,8 +156,8 @@ CREATE TABLE IF NOT EXISTS reports (
 INSERT INTO users (id, name, email, password, phone, role, enabled, verified) VALUES
 (1, 'Aarav Sharma', 'seeker@rentify.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '+91 98765 43210', 'ROLE_SEEKER', TRUE, TRUE),
 (2, 'Ramesh Rao', 'owner@rentify.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '+91 91234 56789', 'ROLE_OWNER', TRUE, TRUE),
-(3, 'Priya Mehta', 'admin@rentify.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '+91 99887 76655', 'ROLE_ADMIN', TRUE, TRUE)
-ON DUPLICATE KEY UPDATE name=VALUES(name);
+(3, 'Dev Sharma', 'devsharmakumar74@gmail.com', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', '+91 99887 76655', 'ROLE_ADMIN', TRUE, TRUE)
+ON DUPLICATE KEY UPDATE name=VALUES(name), email=VALUES(email);
 
 -- Insert Standard Amenities
 INSERT INTO amenities (id, name) VALUES
@@ -173,7 +173,7 @@ INSERT INTO amenities (id, name) VALUES
 (10, 'RO Water'),
 (11, 'Security / CCTV'),
 (12, 'Two-Wheeler Parking')
-ON DUPLICATE KEY UPDATE name=VALUES(name);
+ON DUPLICATE KEY UPDATE name=VALUES(name), email=VALUES(email);
 
 -- Insert Sample Rooms for Owner (Ramesh Rao - ID: 2)
 INSERT INTO rooms (id, owner_id, title, description, rent, security_deposit, address, city, locality, pincode, gender_preference, furnishing_status, room_type, availability_status, available_from, num_occupants, listing_status, verification_status, view_count) VALUES

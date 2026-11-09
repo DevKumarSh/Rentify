@@ -2,6 +2,8 @@ package com.rentify.backend.controller;
 
 import com.rentify.backend.dto.ApiResponse;
 import com.rentify.backend.dto.RoomDTO;
+import com.rentify.backend.exception.DuplicateResourceException;
+import com.rentify.backend.exception.ResourceNotFoundException;
 import com.rentify.backend.model.Favorite;
 import com.rentify.backend.model.Room;
 import com.rentify.backend.model.User;
@@ -50,7 +52,7 @@ public class FavoriteController {
             @RequestParam(defaultValue = "20") int size) {
 
         User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("User not found: " + authentication.getName()));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + authentication.getName()));
 
         Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
         Page<Favorite> favs = favoriteRepository.findByUserId(user.getId(), pageable);
@@ -67,18 +69,22 @@ public class FavoriteController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<String>> addFavorite(@RequestBody Map<String, Object> body, Authentication authentication) {
+        if (!body.containsKey("roomId") || body.get("roomId") == null) {
+            throw new ResourceNotFoundException("Room ID is required");
+        }
         Long roomId = Long.valueOf(body.get("roomId").toString());
 
         User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("User not found: " + authentication.getName()));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + authentication.getName()));
 
         Room room = roomRepository.findById(roomId)
-                .orElseThrow(() -> new RuntimeException("Room not found: " + roomId));
+                .orElseThrow(() -> new ResourceNotFoundException("Room not found: " + roomId));
 
-        if (!favoriteRepository.existsByUserIdAndRoomId(user.getId(), roomId)) {
-            favoriteRepository.save(new Favorite(user, room));
+        if (favoriteRepository.existsByUserIdAndRoomId(user.getId(), roomId)) {
+            throw new DuplicateResourceException("Room is already in your favorites");
         }
 
+        favoriteRepository.save(new Favorite(user, room));
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.ok("Added to favorites", null));
     }
 
@@ -86,7 +92,11 @@ public class FavoriteController {
     @Transactional
     public ResponseEntity<ApiResponse<String>> removeFavorite(@PathVariable Long roomId, Authentication authentication) {
         User user = userRepository.findByEmail(authentication.getName())
-                .orElseThrow(() -> new RuntimeException("User not found: " + authentication.getName()));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + authentication.getName()));
+
+        if (!favoriteRepository.existsByUserIdAndRoomId(user.getId(), roomId)) {
+            throw new ResourceNotFoundException("Favorite not found for room ID: " + roomId);
+        }
 
         favoriteRepository.deleteByUserIdAndRoomId(user.getId(), roomId);
         return ResponseEntity.ok(ApiResponse.ok("Removed from favorites", null));

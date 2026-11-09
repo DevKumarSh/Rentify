@@ -55,7 +55,7 @@ const Login = () => {
     } else if (role === 'OWNER') {
       setFormData({ email: 'owner@rentify.com', password: 'password123' });
     } else if (role === 'ADMIN') {
-      setFormData({ email: 'admin@rentify.com', password: 'password123' });
+      setFormData({ email: 'devsharmakumar74@gmail.com', password: 'password123' });
     }
     setError('');
   };
